@@ -1,3 +1,4 @@
+"use strict";
 const readline = require("readline");
 const clipboardy = require("clipboardy");
 
