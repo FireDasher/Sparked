@@ -17,6 +17,7 @@ const time = 20;
 
 client.on("clientReady", () => {
 	console.log("Logged in as " + client.user!.tag);
+	client.user!.setActivity("Geometry Dash", {type: 0});
 });
 
 const difficulties: Record<number, keyof typeof gd_db> = {
