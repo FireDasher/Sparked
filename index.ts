@@ -48,7 +48,7 @@ function startGame(msg: ChatInputCommandInteraction | ButtonInteraction, difficu
 
 			msg.reply({ embeds: [{
 				title: "Guess the Level!",
-				description: `**Difficulty:** ${difficulties[difficulty]}\n**Type:** Classic\n**Time:** ${time} seconds` + (difficulty === 5 ? "\nThere is no image so this is truly impossible!!!" : ""),
+				description: `**Difficulty:** ${difficulties[difficulty]}\n**Time:** ${time} seconds` + (difficulty === 5 ? "\nThere is no image so this is truly impossible!!!" : ""),
 				color: colorsOfDifficulties[difficulty],
 				...(difficulty !== 5 && {image: {
 					"url": "https://levelthumbs.prevter.me/thumbnail/" + lvlID,
@@ -61,7 +61,7 @@ function startGame(msg: ChatInputCommandInteraction | ButtonInteraction, difficu
 					const game = games[msg.channelId];
 					msg.followUp({ embeds: [{
 						title: `Time is up! The correct answer was ${game.answer}`,
-						description: `**Level**: ${game.answer}\n**Difficulty:** ${difficulties[game.difficulty]}\n**Type:** Classic\n**Time:** ${time} seconds`,
+						description: `**Level**: ${game.answer}\n**Difficulty:** ${difficulties[game.difficulty]}\n**Time:** ${time} seconds`,
 						color: colorsOfDifficulties[game.difficulty],
 					}], components: [{
 						type: 1, components: [{
@@ -105,7 +105,7 @@ client.on("messageCreate", msg => {
 		if (msg.content.trim().toLowerCase() === game.answer.toLowerCase()) {
 			msg.reply({ embeds: [{
 				title: "Congratulations! You guessed the Level correctly!",
-				description: `**Level**: ${game.answer}\n**Difficulty:** ${difficulties[game.difficulty]}\n**Type:** Classic\n**Time:** ${time} seconds`,
+				description: `**Level**: ${game.answer}\n**Difficulty:** ${difficulties[game.difficulty]}\n**Time:** ${time} seconds`,
 				color: colorsOfDifficulties[game.difficulty],
 			}], components: [{
 				type: 1, components: [{
