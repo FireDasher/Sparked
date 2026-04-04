@@ -1,6 +1,7 @@
 "use strict";
 import "dotenv/config";
 import { ButtonInteraction, ChatInputCommandInteraction, Client, GatewayIntentBits } from "discord.js";
+import gd_db from "./gd-database.json" with {type: "json"};
 
 // function format(string: string, replacements: Record<string, string>): string {
 // 	return string.replace(/\{(.*?)\}/g, (_, key)=>replacements[key]);
@@ -18,7 +19,7 @@ client.on("clientReady", () => {
 	console.log("Logged in as " + client.user!.tag);
 });
 
-const difficulties: Record<number, string> = {
+const difficulties: Record<number, keyof typeof gd_db> = {
 	0: "Noob",
 	1: "Easy",
 	2: "Medium",
@@ -34,14 +35,13 @@ const colorsOfDifficulties: Record<number, number> = {
 	4: 0x800080,
 	5: 0x400000,
 };
-import gd_db from "./gd-database.json" with {type: "json"};
 const games: Record<string, {answer: string, difficulty: number, timeout: NodeJS.Timeout}> = {};
 
 function startGame(msg: ChatInputCommandInteraction | ButtonInteraction, difficulty: number) {
 	if (msg.channelId! in games) msg.reply("There is already a game in this channel!");
 	else {
 		if (difficulty in difficulties) {
-			const db_section = difficulty === 5 ? Object.assign({}, ...Object.values(gd_db)) : gd_db[difficulties[difficulty] as keyof typeof gd_db];
+			const db_section = difficulty === 5 ? Object.assign({}, ...Object.values(gd_db)) : gd_db[difficulties[difficulty]];
 			const db_keys = Object.keys(db_section);
 			const lvlID = db_keys[Math.floor(Math.random() * db_keys.length)] ?? 1;
 			const lvlName = db_section[lvlID] ?? "Stereo Madness";

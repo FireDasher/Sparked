@@ -1,10 +1,10 @@
 "use strict";
-const readline = require("readline");
-const clipboardy = require("clipboardy");
+import readline from "readline";
+import clipboardy from "clipboardy";
 
 const rl = readline.createInterface(process.stdin, process.stdout);
 
-const input = [];
+const input: string[] = [];
 
 rl.on("line", line=>{
 	input.push(line);
@@ -27,9 +27,9 @@ rl.on("close", ()=>{
 		const id = input[idx];
 		if (id === "") continue;
 		if (id in bracket2diff) {
-			diff = bracket2diff[id];
+			diff = bracket2diff[id as keyof typeof bracket2diff];
 		} else {
-			console.log("Ferthing " + id);
+			console.log("Fetching " + id);
 			total++;
 			fetch("https://gdbrowser.com/api/level/" + id).then(res=>{
 				res.json().then(e=>{
@@ -43,7 +43,7 @@ rl.on("close", ()=>{
 	}
 	const checkdone = ()=>{
 		if (finished == total) {
-			clipboardy.default.writeSync(JSON.stringify(result, null, "\t"));
+			clipboardy.writeSync(JSON.stringify(result, null, "\t"));
 			console.log("Wrote to clipbaord");
 		} else {
 			setTimeout(checkdone, 100);

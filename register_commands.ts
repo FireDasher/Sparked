@@ -1,11 +1,11 @@
 "use strict";
-require("dotenv").config({quiet: true});
-const { REST, Routes, SlashCommandBuilder } = require("discord.js");
-const rest = new REST().setToken(process.env.BOT_TOKEN);
+import "dotenv/config";
+import { REST, Routes, SlashCommandBuilder } from "discord.js";
+const rest = new REST().setToken(process.env.BOT_TOKEN!);
 
 (async () => {
     await rest.put(
-        Routes.applicationCommands(process.env.APP_ID),
+        Routes.applicationCommands(process.env.APP_ID!),
         { body: [
 			new SlashCommandBuilder()
 				.setName("guess")
