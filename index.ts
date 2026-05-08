@@ -103,7 +103,7 @@ client.on("messageCreate", msg => {
 
 	if (msg.channelId in games) {
 		const game = games[msg.channelId];
-		if (msg.content.trim().toLowerCase() === game.answer.toLowerCase()) {
+		if (msg.content.trim().toLowerCase() === game.answer.trim().toLowerCase()) {
 			msg.reply({ embeds: [{
 				title: "Congratulations! You guessed the Level correctly!",
 				description: `**Level**: ${game.answer}\n**Difficulty:** ${difficulties[game.difficulty]}\n**Time:** ${time} seconds`,
