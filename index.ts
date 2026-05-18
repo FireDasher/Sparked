@@ -3,10 +3,6 @@ import "dotenv/config";
 import { ButtonInteraction, ChatInputCommandInteraction, Client, GatewayIntentBits } from "discord.js";
 import gd_db from "./gd-database.json" with {type: "json"};
 
-// function format(string: string, replacements: Record<string, string>): string {
-// 	return string.replace(/\{(.*?)\}/g, (_, key)=>replacements[key]);
-// }
-
 const client = new Client({ intents: [
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.Guilds,
@@ -36,7 +32,9 @@ const colorsOfDifficulties: Record<number, number> = {
 	4: 0x800080,
 	5: 0x400000,
 };
-const games: Record<string, {answer: string, difficulty: number, timeout: NodeJS.Timeout}> = {};
+
+type Game = {answer: string, difficulty: number, timeout: NodeJS.Timeout};
+const games: Record<string, Game> = {};
 
 function startGame(msg: ChatInputCommandInteraction | ButtonInteraction, difficulty: number) {
 	if (msg.channelId! in games) msg.reply("There is already a game in this channel!");
@@ -82,6 +80,21 @@ function startGame(msg: ChatInputCommandInteraction | ButtonInteraction, difficu
 	}
 }
 
+function getResponseToCorrectAnswer(game: Game) {
+	return { embeds: [{
+				title: "Congratulations! You guessed the Level correctly!",
+				description: `**Level**: ${game.answer}\n**Difficulty:** ${difficulties[game.difficulty]}\n**Time:** ${time} seconds`,
+				color: colorsOfDifficulties[game.difficulty],
+			}], components: [{
+				type: 1, components: [{
+					type: 2,
+					label: "Start new game",
+					style: 2,
+					custom_id: "start_new_game-" + game.difficulty
+				}]
+			}] };
+}
+
 client.on("interactionCreate", msg => {
 	if (msg.isChatInputCommand()) {
 		const cmd = msg.commandName;
@@ -91,6 +104,21 @@ client.on("interactionCreate", msg => {
 	
 		if (cmd === "guess") {
 			startGame(msg, msg.options.getInteger("difficulty")!);
+		}
+		if (cmd === "answer") {
+			if (msg.channelId in games) {
+				const guess = msg.options.getString("guess")!;
+				const game = games[msg.channelId];
+				if (guess.trim().toLowerCase() === game.answer.trim().toLowerCase()) {
+					msg.reply(getResponseToCorrectAnswer(game));
+					clearTimeout(game.timeout);
+					delete games[msg.channelId];
+				} else {
+					msg.reply(`Incorrect guess: "${guess}"`);
+				}
+			} else {
+				msg.reply("There are no active games in this channel!");
+			}
 		}
 	} else if (msg.isButton()) {
 		if (msg.customId.startsWith("start_new_game"))
@@ -104,18 +132,7 @@ client.on("messageCreate", msg => {
 	if (msg.channelId in games) {
 		const game = games[msg.channelId];
 		if (msg.content.trim().toLowerCase() === game.answer.trim().toLowerCase()) {
-			msg.reply({ embeds: [{
-				title: "Congratulations! You guessed the Level correctly!",
-				description: `**Level**: ${game.answer}\n**Difficulty:** ${difficulties[game.difficulty]}\n**Time:** ${time} seconds`,
-				color: colorsOfDifficulties[game.difficulty],
-			}], components: [{
-				type: 1, components: [{
-					type: 2,
-					label: "Start new game",
-					style: 2,
-					custom_id: "start_new_game-" + game.difficulty
-				}]
-			}] });
+			msg.reply(getResponseToCorrectAnswer(game));
 			clearTimeout(game.timeout);
 			delete games[msg.channelId];
 		}
