@@ -24,7 +24,11 @@ const rest = new REST().setToken(process.env.BOT_TOKEN!);
 				.setDescription("Answers to the active game in the current channel. ONLY REQUIRED FOR USER INSTALLATION!")
 				.setContexts([0, 1, 2])
 				.setIntegrationTypes(1)
-				.addStringOption(option => option.setName("guess").setDescription("guess"))
+				.addStringOption(option =>
+					option.setName("guess")
+					.setDescription("guess")
+					.setRequired(true)
+				)
 				.toJSON()
 		] }
     );
