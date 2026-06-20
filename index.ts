@@ -102,10 +102,10 @@ client.on("interactionCreate", msg => {
 		if (cmd === "ping") msg.reply("Pong! 🏓");
 		if (cmd === "pong") msg.reply("Ping! 🏓");
 	
-		if (cmd === "guess") {
+		if (cmd === "sparked") {
 			startGame(msg, msg.options.getInteger("difficulty")!);
 		}
-		if (cmd === "answer") {
+		if (cmd === "guess") {
 			if (msg.channelId in games) {
 				const guess = msg.options.getString("guess")!;
 				const game = games[msg.channelId];

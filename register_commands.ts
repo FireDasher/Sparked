@@ -8,8 +8,8 @@ const rest = new REST().setToken(process.env.BOT_TOKEN!);
         Routes.applicationCommands(process.env.APP_ID!),
         { body: [
 			new SlashCommandBuilder()
-				.setName("guess")
-				.setDescription("Starts a new guessing game")
+				.setName("sparked")
+				.setDescription("Starts a new Sparked guessing game")
 				.setContexts([0, 1, 2])
 				.setIntegrationTypes([0, 1])
 				.addIntegerOption(option =>
@@ -20,8 +20,8 @@ const rest = new REST().setToken(process.env.BOT_TOKEN!);
 				)
 				.toJSON(),
 			new SlashCommandBuilder()
-				.setName("answer")
-				.setDescription("Answers to the active game in the current channel. ONLY REQUIRED FOR USER INSTALLATION!")
+				.setName("guess")
+				.setDescription("Submits a guess to the active game in the current channel. ONLY REQUIRED FOR USER INSTALLATION!")
 				.setContexts([0, 1, 2])
 				.setIntegrationTypes(1)
 				.addStringOption(option =>
