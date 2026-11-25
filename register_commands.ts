@@ -16,7 +16,7 @@ const rest = new REST().setToken(process.env.BOT_TOKEN!);
 					option.setName("difficulty")
 					.setDescription("Choose a difficulty")
 					.setRequired(true)
-					.addChoices({name: "Noob", value: 0}, {name: "Easy", value: 1}, {name: "Medium", value: 2}, {name: "Hard", value: 3}, {name: "Extreme", value: 4}, {name: "IMPOSSIBLE!!!", value: 5})
+					.addChoices({name: "Noob", value: 0}, {name: "Easy", value: 1}, {name: "Medium", value: 2}, {name: "Hard", value: 3}, {name: "Extreme", value: 4}, {name: "IMPOSSIBLE!!!", value: 5}, {name: "Demonlist", value: 6})
 				)
 				.toJSON(),
 			new SlashCommandBuilder()

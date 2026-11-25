@@ -3,6 +3,18 @@ import "dotenv/config";
 import { ButtonInteraction, ChatInputCommandInteraction, Client, GatewayIntentBits } from "discord.js";
 import gd_db from "./gd-database.json" with {type: "json"};
 
+async function getDemonlistLevels(): Promise<Record<string, string>> {
+	const res = await fetch("https://pointercrate.com/api/v2/demons/listed/");
+	const json: Array<Object> = await res.json();
+	const levels: Record<string, string> = {};
+	json.forEach((level: Record<string, any>) => {
+		levels[String(level.level_id)] = level.name;
+	});
+	return levels;
+}
+
+gd_db["Demonlist"] = await getDemonlistLevels();
+
 const client = new Client({ intents: [
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.Guilds,
@@ -23,7 +35,8 @@ const difficulties: Record<number, keyof typeof gd_db> = {
 	3: "Hard",
 	4: "Extreme",
 	5: "IMPOSSIBLE!!!",
-}
+	6: "Demonlist",
+};
 const colorsOfDifficulties: Record<number, number> = {
 	0: 0xFFFF40,
 	1: 0x8BD66B,
@@ -31,6 +44,7 @@ const colorsOfDifficulties: Record<number, number> = {
 	3: 0xD64228,
 	4: 0x800080,
 	5: 0x400000,
+	6: 0xD35839,
 };
 
 type Game = {answer: string, difficulty: number, timeout: NodeJS.Timeout};
@@ -98,10 +112,10 @@ function getResponseToCorrectAnswer(game: Game) {
 client.on("interactionCreate", msg => {
 	if (msg.isChatInputCommand()) {
 		const cmd = msg.commandName;
-	
+
 		if (cmd === "ping") msg.reply("Pong! 🏓");
 		if (cmd === "pong") msg.reply("Ping! 🏓");
-	
+
 		if (cmd === "sparked") {
 			startGame(msg, msg.options.getInteger("difficulty")!);
 		}
